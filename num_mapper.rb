@@ -1,0 +1,2 @@
+class NumMapper
+end
