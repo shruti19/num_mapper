@@ -1,5 +1,6 @@
 class NumMapper
-  def self.add
+
+  def self.add str
 
   end
 end
