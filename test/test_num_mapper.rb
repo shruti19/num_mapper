@@ -38,9 +38,17 @@ class TestNumMapper < Minitest::Test
       assert_equal NumMapper.add("1\n3;4,2\n3"), 'Invalid Delimiter'
     end
 
-    it "should support adding new delimiter declared using string prefix '//[delimiter]\n'" do
+    it "should support adding new delimiter declared using string prefix '//delimiter\n'" do
       assert_equal NumMapper.add("//;\n1;2"), 3 
       assert_equal NumMapper.add("//|\n1|2,3\n4"), 10
+    end
+
+    it "should skip adding numbers > 1000" do
+      assert_equal NumMapper.add("1,1000\n20\n100"), 121 
+    end
+
+    it "should allow multichar delimiters to declared using prefix '//[delimiter]\n'" do
+      assert_equal NumMapper.add("//[$$$]\n3,7$$$10"), 20
     end
 
 	end
@@ -50,6 +58,11 @@ class TestNumMapper < Minitest::Test
     it "should return single char delimiter with sanitized string" do
       dc = DelimScanner.new "//&\n1,3&6"
       assert_equal dc.single_char_delim_scan, ['&', '1,3&6']
+    end
+
+    it "should return the multichar char delimiter with sanitized string" do
+      dc = DelimScanner.new "//[&&]\n1,3&&6"
+      assert_equal dc.single_char_delim_scan, ['&&', '1,3&&6']
     end
 
   end
