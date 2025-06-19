@@ -38,5 +38,10 @@ class TestNumMapper < Minitest::Test
       assert_equal NumMapper.add("1\n3;4,2\n3"), 'Invalid Input'
     end
 
+    it "should support adding new delimiter declared using string prefix '//[delimiter]\n'" do
+      assert_equal NumMapper.add("//;\n1;2"), 3 
+      assert_equal NumMapper.add("//|\n1|2,3\n4"), 10
+    end
+
 	end
 end
