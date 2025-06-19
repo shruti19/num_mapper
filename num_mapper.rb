@@ -23,7 +23,15 @@ class NumMapper
     negitives = str.scan(/-\d+/).map(&:to_i)
     raise "negatives not allowed (found #{negitives.join(', ')})" if !negitives.empty?
 
+    ## Delimiters should not be placed adjacent to each other
     if !str.scan(/([\n,]){2,}/).empty?
+      result[:is_valid] = false
+      result[:message] = "Invalid Input"
+      return
+    end
+
+    ## Unidentified delimiter found
+    if !str.scan(/[^,\n0-9]+/).empty?
       result[:is_valid] = false
       result[:message] = "Invalid Input"
       return
