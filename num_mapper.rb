@@ -4,8 +4,13 @@ class NumMapper
     sum = 0
     return sum if str.empty?
     
-    run_validations str
+    result = {is_valid: true, message: nil}
+    run_validations str, result
     
+    if !result[:is_valid]
+      return result[:message]
+    end
+
     nums = str.scan(/\d+/)
     nums.each do |s|
       sum += s.to_i
@@ -14,9 +19,16 @@ class NumMapper
     sum
   end
 
-  def self.run_validations str
+  def self.run_validations str, result
     negitives = str.scan(/-\d+/).map(&:to_i)
     raise "negatives not allowed (found #{negitives.join(', ')})" if !negitives.empty?
+
+    if !str.scan(/([\n,]){2,}/).empty?
+      result[:is_valid] = false
+      result[:message] = "Invalid Input"
+      return
+    end
+
   end
 
 end
