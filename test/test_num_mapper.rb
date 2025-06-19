@@ -23,6 +23,10 @@ class TestNumMapper < Minitest::Test
       assert_equal NumMapper.add("0,3\n2,4"), 9
     end
 
+    it "should print 'Invalid Input' if comma and newline character are placed adjacent in a string" do
+      assert_equal NumMapper.add("1\n3,4,2\n,3"), 'Invalid Input'
+    end
+
     it "should throw execption if string has negative numbers and list all negative numbers" do
       err = assert_raises RuntimeError do 
         NumMapper.add("-1,2,-3,4")
