@@ -6,8 +6,14 @@ class NumMapper
     
     delim_scanner = DelimScanner.new str
     delim, str = delim_scanner.lookup_delimiters
-    @scd = delim if delim.to_s.length == 1
-    @mcd = delim if delim.to_s.length > 1
+    @scd = delim.is_a?(String) && delim.to_s.length == 1 ? delim : ''
+    @mcd ||= []    
+    if delim.is_a?(Array)
+      delim.each do |d|
+        @scd += d if d.length == 1
+        @mcd << d if d.length > 1
+      end
+    end
     
     result = {is_valid: true, message: nil}
     run_validations str, result
@@ -29,7 +35,7 @@ class NumMapper
     raise "negatives not allowed (found #{negitives.join(', ')})" if !negitives.empty?
 
     ## Delimiters should not be placed adjacent to each other
-    append_regex1 = @mcd.nil? ? '' : "|[#{@mcd[0]}]{#{@mcd.length+1},}"
+    append_regex1 = @mcd.empty? ? '' : @mcd.map{|m| "|[#{m[0]}]{#{m.length+1},}"}.join
     invalid_delim_placement_regex = /([#{@scd}\n,]){2,}#{append_regex1}/
 
     if !str.scan(invalid_delim_placement_regex).empty? 
@@ -39,9 +45,9 @@ class NumMapper
     end
 
     ## Unidentified delimiter found
-    append_regex2 = @mcd.nil? ? '' : "(#{@mcd[0]}{#{@mcd.length}})"
+    append_regex2 = @mcd.empty? ? '' : @mcd.map{ |m| "(#{m[0]}{#{m.length}})" }.join
     unidentified_delim_regex = /[^,\n#{@scd}0-9#{append_regex2}]/
-
+    
     if !str.scan(unidentified_delim_regex).empty? 
       result[:is_valid] = false
       result[:message] = "Invalid Delimiter"
@@ -65,9 +71,9 @@ class DelimScanner
   end
 
   def multi_char_delim_scan
-    regex = /\/\/\[(.*)\]\n/
-    mcd = @input.scan(regex).flatten[0]
-    sanitized_input = @input.gsub(regex, '')
+    regex = /\[(.*?)\]/
+    mcd = @input.scan(regex).flatten
+    sanitized_input = @input.gsub("//[#{mcd.join('][')}]\n", '')
     return mcd, sanitized_input
   end
 
