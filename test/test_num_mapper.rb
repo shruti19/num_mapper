@@ -51,6 +51,11 @@ class TestNumMapper < Minitest::Test
       assert_equal NumMapper.add("//[$$$]\n3,7$$$10"), 20
     end
 
+    it "should allow mixed delimiters declared as '//[delim1][delim2]\n'" do
+      assert_equal NumMapper.add("//[**][;]\n5;4**9\n1,2"), 21
+      assert_equal NumMapper.add("//[**][;][@@@]\n5;4**9\n1,2@@@4"), 25
+    end
+
 	end
 
   describe "DelimScanner#single_char_delim_scan" do
