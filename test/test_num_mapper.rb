@@ -34,5 +34,9 @@ class TestNumMapper < Minitest::Test
       assert_equal err.message, "negatives not allowed (found -1, -3)"
     end
 
+    it "should print 'Invalid Input' if unidentified delimiter found" do
+      assert_equal NumMapper.add("1\n3;4,2\n3"), 'Invalid Input'
+    end
+
 	end
 end
