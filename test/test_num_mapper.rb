@@ -62,7 +62,8 @@ class TestNumMapper < Minitest::Test
 
     it "should return the multichar char delimiter with sanitized string" do
       dc = DelimScanner.new "//[&&]\n1,3&&6"
-      assert_equal dc.single_char_delim_scan, ['&&', '1,3&&6']
+      assert_respond_to dc, :multi_char_delim_scan
+      assert_equal dc.multi_char_delim_scan, ['&&', '1,3&&6']
     end
 
   end
