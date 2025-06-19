@@ -44,4 +44,14 @@ class TestNumMapper < Minitest::Test
     end
 
 	end
+
+  describe "DelimScanner#single_char_delim_scan" do
+
+    it "should return single char delimiter with sanitized string" do
+      dc = DelimScanner.new "//&\n1,3&6"
+      assert_equal dc.single_char_delim_scan, ['&', '1,3&6']
+    end
+
+  end
+
 end

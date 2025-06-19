@@ -5,8 +5,8 @@ class NumMapper
     sum = 0
     return sum if str.empty?
     
-    @scd = str.scan(/\/\/(.)\n/).flatten[0]
-    str.gsub!(/\/\/(.)\n/, '')
+    delim_scanner = DelimScanner.new str
+    @scd, str = delim_scanner.single_char_delim_scan
 
     result = {is_valid: true, message: nil}
     run_validations str, result
@@ -41,6 +41,20 @@ class NumMapper
       return
     end
 
+  end
+
+end
+
+class DelimScanner
+
+  def initialize str
+    @input = str
+  end
+
+  def single_char_delim_scan
+    scb = @input.scan(/\/\/(.)\n/).flatten[0]
+    sanitized_input = @input.gsub(/\/\/(.)\n/, '')
+    return scb, sanitized_input
   end
 
 end
