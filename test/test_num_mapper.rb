@@ -23,5 +23,12 @@ class TestNumMapper < Minitest::Test
       assert_equal NumMapper.add("0,3\n2,4"), 9
     end
 
+    it "should throw execption if string has negative numbers and list all negative numbers" do
+      err = assert_raises RuntimeError do 
+        NumMapper.add("-1,2,-3,4")
+      end
+      assert_equal err.message, "negatives not allowed (found -1, -3)"
+    end
+
 	end
 end
